@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Como funciona o anúncio de verdade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDEBE6; --ink:#000000; --mute:#6E6C67; --line:#000000; --soft:#DAD7D0;
+  --card:#F7F6F2; --or:#FF5A1F; --or-ink:#000000;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#000000; --ink:#EDEBE6; --mute:#9A978F; --line:#EDEBE6; --soft:#2A2926; --card:#141412;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --ink:#EDEBE6; --mute:#9A978F; --line:#EDEBE6; --soft:#2A2926; --card:#141412;
+}
+*{box-sizing:border-box;margin:0;padding:0;border-radius:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"Neue Haas Grotesk Display Pro","Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;line-height:1.5;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%;display:block}
+.brand{position:fixed;right:22px;bottom:18px;font-weight:800;font-size:15px;letter-spacing:-.02em;z-index:10;background:var(--bg);padding:2px 6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+section{border-top:2px solid var(--line);padding:96px 0}
+h1{font-size:clamp(52px,9vw,128px);line-height:.9;letter-spacing:-.045em;font-weight:900}
+h2{font-size:clamp(38px,5.5vw,72px);line-height:.95;letter-spacing:-.04em;font-weight:900;max-width:16ch}
+h3{font-size:26px;letter-spacing:-.02em;font-weight:800;line-height:1.1}
+p{max-width:62ch}
+.lead{font-size:24px;line-height:1.35;max-width:36ch;letter-spacing:-.01em}
+.mute{color:var(--mute)}
+.step{display:flex;gap:18px;align-items:baseline;margin-bottom:28px}
+.step b{font-size:18px;font-weight:800;border:2px solid var(--line);padding:2px 10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2px solid var(--line)}
+.grid3>div{padding:28px;border-right:2px solid var(--line)}
+.grid3>div:last-child{border-right:0}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--line)}
+.grid4>div{padding:22px;border-right:2px solid var(--line);text-align:center}
+.grid4>div:last-child{border-right:0}
+.big{font-size:64px;font-weight:900;letter-spacing:-.04em;line-height:1}
+.note{font-size:14px;color:var(--mute);margin-top:14px}
+.hl{background:var(--or);color:var(--or-ink);padding:0 6px}
+/* hero */
+.hero{border-top:0;padding:72px 0 96px}
+.hero .grid2{grid-template-columns:1.3fr .7fr}
+/* formula */
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:40px 0;font-weight:900;font-size:clamp(22px,3vw,36px);letter-spacing:-.02em}
+.formula span.box{border:2px solid var(--line);padding:10px 18px;background:var(--card)}
+.formula span.res{background:var(--or);color:var(--or-ink);border-color:var(--or)}
+/* auction */
+.auction{display:grid;grid-template-columns:.9fr 1.1fr;border:2px solid var(--line);margin-top:40px}
+.controls{padding:28px;border-right:2px solid var(--line);background:var(--card)}
+.ctrl{margin-bottom:26px}
+.ctrl label{display:flex;justify-content:space-between;font-weight:700;font-size:17px;margin-bottom:8px}
+.ctrl output{font-weight:900}
+.ctrl small{display:block;color:var(--mute);font-size:14px;margin-top:6px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:4px;background:var(--ink);outline-offset:6px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;background:var(--ink);border:3px solid var(--bg);outline:2px solid var(--ink);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;background:var(--ink);border:3px solid var(--bg);outline:2px solid var(--ink);cursor:pointer;border-radius:0}
+input[type=range]:focus-visible{outline:3px solid var(--or)}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+.presets button{font:inherit;font-size:15px;font-weight:700;background:transparent;color:var(--ink);border:2px solid var(--line);padding:6px 12px;cursor:pointer}
+.presets button:hover,.presets button:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+.board{padding:28px}
+.row{display:grid;grid-template-columns:150px 1fr 70px;gap:14px;align-items:center;margin-bottom:16px}
+.row .name{font-weight:800;font-size:17px;line-height:1.15}
+.row .name small{display:block;font-weight:500;color:var(--mute);font-size:13px}
+.bar{height:34px;background:var(--soft);position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--ink);transition:width .35s ease}
+.row.win .bar i{background:var(--or)}
+.row .score{font-weight:900;font-size:22px;text-align:right}
+.verdict{border-top:2px solid var(--line);margin-top:22px;padding-top:22px}
+.verdict h3{margin-bottom:8px}
+/* people */
+.people{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--line);margin-top:40px}
+.person{padding:26px;border-right:2px solid var(--line)}
+.person:last-child{border-right:0}
+.person .ask{font-size:14px;font-weight:700;border:2px solid var(--line);display:inline-block;padding:2px 8px;margin-bottom:18px}
+.person svg{width:96px;height:96px;margin-bottom:14px}
+.person dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin-top:14px;font-size:15px;border-top:2px solid var(--line);padding-top:12px}
+.person dd{font-weight:900;text-align:right}
+/* ads compare */
+.ads{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:40px}
+.ad{border:2px solid var(--line);background:var(--card)}
+.ad .top{display:flex;gap:10px;align-items:center;padding:12px 14px;border-bottom:2px solid var(--line);font-size:14px;font-weight:700}
+.ad .top i{width:26px;height:26px;background:var(--ink);display:block}
+.ad .img{aspect-ratio:1/1;border-bottom:2px solid var(--line)}
+.ad .cap{padding:12px 14px;font-size:15px}
+.ad .res{padding:12px 14px;border-top:2px solid var(--line);font-size:15px;display:flex;justify-content:space-between;font-weight:700}
+/* chart */
+.chart{border:2px solid var(--line);padding:28px;margin-top:40px}
+.cols{display:flex;align-items:flex-end;gap:18px;height:280px;border-bottom:2px solid var(--line)}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;height:100%}
+.col .stack{width:100%;display:flex;flex-wrap:wrap-reverse;gap:3px;align-content:flex-start}
+.col .stack span{width:14px;height:14px;background:var(--ink)}
+.col .price{font-weight:900;font-size:20px}
+.labels{display:flex;gap:18px;margin-top:10px}
+.labels div{flex:1;text-align:center;font-size:14px;font-weight:700}
+/* todo */
+.todo{border:2px solid var(--line)}
+.todo>div{display:grid;grid-template-columns:90px 1fr 1fr;border-bottom:2px solid var(--line)}
+.todo>div:last-child{border-bottom:0}
+.todo>div>*{padding:24px}
+.todo .n{font-size:48px;font-weight:900;border-right:2px solid var(--line);line-height:1}
+.todo .no{border-right:2px solid var(--line);color:var(--mute);text-decoration:line-through;text-decoration-thickness:2px}
+.sources{font-size:14px;color:var(--mute)}
+.sources li{margin:6px 0 6px 18px;max-width:80ch}
+.sources a{color:inherit}
+@media (max-width:860px){
+  body{font-size:17px}
+  section{padding:64px 0}
+  .grid2,.hero .grid2,.auction,.ads{grid-template-columns:1fr}
+  .controls{border-right:0;border-bottom:2px solid var(--line)}
+  .grid3,.people{grid-template-columns:1fr}
+  .grid3>div,.person{border-right:0;border-bottom:2px solid var(--line)}
+  .grid3>div:last-child,.person:last-child{border-bottom:0}
+  .grid4{grid-template-columns:1fr 1fr}
+  .grid4>div:nth-child(2){border-right:0}
+  .grid4>div:nth-child(-n+2){border-bottom:2px solid var(--line)}
+  .row{grid-template-columns:110px 1fr 54px}
+  .todo>div{grid-template-columns:60px 1fr}
+  .todo .no{grid-column:2}
+  .todo .yes{grid-column:2}
+  .todo .n{grid-row:span 2}
+  .cols{gap:8px}.labels{gap:8px}
+  .col .stack span{width:9px;height:9px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="brand">tomorrow.</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap grid2">
+    <div>
+      <h1>Como funciona o anúncio de verdade.</h1>
+      <p class="lead" style="margin-top:32px">Sem curso de 997. Sem guru. Só a dona Cida, um celular e um leilão que acontece mais rápido que você piscar.</p>
+    </div>
+    <svg viewBox="0 0 260 480" aria-label="Celular mostrando o feed com uma vaga de anúncio">
+      <rect x="6" y="6" width="248" height="468" fill="var(--card)" stroke="var(--ink)" stroke-width="4"/>
+      <rect x="100" y="20" width="60" height="8" fill="var(--ink)"/>
+      <g stroke="var(--ink)" stroke-width="3" fill="none">
+        <rect x="26" y="48" width="208" height="110"/>
+        <line x1="26" y1="48" x2="234" y2="158"/><line x1="234" y1="48" x2="26" y2="158"/>
+      </g>
+      <rect x="26" y="166" width="120" height="8" fill="var(--ink)"/>
+      <rect x="26" y="192" width="208" height="120" fill="var(--or)"/>
+      <text x="130" y="246" text-anchor="middle" font-family="inherit" font-weight="900" font-size="26" fill="#000">VAGA</text>
+      <text x="130" y="274" text-anchor="middle" font-family="inherit" font-weight="600" font-size="14" fill="#000">quem vai aparecer aqui?</text>
+      <g stroke="var(--ink)" stroke-width="3" fill="none">
+        <rect x="26" y="330" width="208" height="110"/>
+        <line x1="26" y1="330" x2="234" y2="440"/><line x1="234" y1="330" x2="26" y2="440"/>
+      </g>
+      <rect x="26" y="448" width="90" height="8" fill="var(--ink)"/>
+    </svg>
+  </div>
+</header>
+
+<!-- 1 VAGA -->
+<section>
+  <div class="wrap">
+    <div class="step"><b>1</b><span class="mute">A vaga</span></div>
+    <div class="grid2">
+      <div>
+        <h2>Toda vez que alguém rola o feed, abre uma vaga.</h2>
+      </div>
+      <div>
+        <p class="lead">A dona Cida tá na fila do banco rolando o Instagram. Entre um post da sobrinha e um vídeo de gato, aparece um espaço pra anúncio.</p>
+        <p style="margin-top:18px">Esse espaço não é de ninguém. Ele vai pra quem ganhar um leilão que acontece ali, na hora, pra cada pessoa, cada vez que ela rola.</p>
+      </div>
+    </div>
+
+    <h3 style="margin:64px 0 20px">Quem tá brigando pela mesma vaga</h3>
+    <div class="grid4">
+      <div>
+        <svg viewBox="0 0 80 80" width="80" height="80" style="margin:0 auto 12px"><polygon points="40,8 74,70 6,70" fill="none" stroke="var(--ink)" stroke-width="4"/><circle cx="40" cy="50" r="5" fill="var(--ink)"/><circle cx="28" cy="60" r="4" fill="var(--ink)"/><circle cx="52" cy="60" r="4" fill="var(--ink)"/></svg>
+        <strong>A pizzaria</strong><div class="note" style="margin-top:4px">da esquina</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 80 80" width="80" height="80" style="margin:0 auto 12px"><rect x="8" y="8" width="64" height="64" fill="none" stroke="var(--ink)" stroke-width="4"/><circle cx="24" cy="24" r="5" fill="var(--ink)"/><circle cx="40" cy="40" r="5" fill="var(--ink)"/><circle cx="56" cy="56" r="5" fill="var(--ink)"/></svg>
+        <strong>A bet</strong><div class="note" style="margin-top:4px">com dinheiro infinito</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 80 80" width="80" height="80" style="margin:0 auto 12px"><rect x="22" y="10" width="36" height="12" fill="var(--ink)"/><rect x="16" y="22" width="48" height="50" fill="none" stroke="var(--ink)" stroke-width="4"/><line x1="26" y1="46" x2="54" y2="46" stroke="var(--ink)" stroke-width="4"/></svg>
+        <strong>A pomada de cavalo</strong><div class="note" style="margin-top:4px">pra dor nas costas</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 80 80" width="80" height="80" style="margin:0 auto 12px"><circle cx="40" cy="28" r="16" fill="var(--or)" stroke="var(--ink)" stroke-width="4"/><path d="M12 74c0-18 12-28 28-28s28 10 28 28" fill="none" stroke="var(--ink)" stroke-width="4"/></svg>
+        <strong>Você</strong><div class="note" style="margin-top:4px">e seu X-tudo</div>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin-top:40px">
+      <div><div class="big">147 mi</div><p style="margin-top:8px">pessoas que dá pra alcançar com anúncio no Instagram no Brasil.</p></div>
+      <div><div class="big">109 mi</div><p style="margin-top:8px">no Facebook. Sim, o Facebook que "ninguém usa".</p></div>
+      <div><div class="big">1 vaga</div><p style="margin-top:8px">por vez, na tela de cada uma dessas pessoas.</p></div>
+    </div>
+    <p class="note">Alcance potencial de anúncios no fim de 2025, segundo as ferramentas da própria Meta (DataReportal, Digital 2026 Brasil). Não é o mesmo que usuário ativo.</p>
+  </div>
+</section>
+
+<!-- 2 LEILÃO -->
+<section>
+  <div class="wrap">
+    <div class="step"><b>2</b><span class="mute">O leilão</span></div>
+    <h2>Não ganha quem paga mais. Se fosse assim, a dona Cida só via bet.</h2>
+    <p class="lead" style="margin-top:28px">A Meta dá uma nota pra cada anúncio. Quem tirar a maior nota aparece. A conta é essa, e quem explica é a própria Meta:</p>
+
+    <div class="formula" role="img" aria-label="Nota do anúncio é igual a lance vezes chance de ação, mais qualidade">
+      <span class="box">Quanto você topa pagar</span><span>×</span>
+      <span class="box">Chance da pessoa fazer o que você pediu</span><span>+</span>
+      <span class="box">Qualidade do anúncio</span><span>=</span>
+      <span class="box res">Nota</span>
+    </div>
+
+    <div class="grid3">
+      <div><h3>Lance</h3><p style="margin-top:10px">O máximo que você aceita pagar. Normalmente a Meta nem cobra tudo isso: ela cobra o suficiente pra você ganhar.</p></div>
+      <div><h3>Chance</h3><p style="margin-top:10px">A aposta da Meta: essa pessoa vai clicar, mandar mensagem ou comprar? Ela olha o histórico de cada um.</p></div>
+      <div><h3>Qualidade</h3><p style="margin-top:10px">Se as pessoas escondem, ignoram ou marcam "ver menos", sua nota cai. Anúncio chato é multado.</p></div>
+    </div>
+
+    <h3 style="margin-top:72px">Brinca aí: você contra a bet e a pizzaria</h3>
+    <p class="mute" style="margin-top:6px">Mexe nos controles do seu anúncio e vê quem ganha a vaga da dona Cida.</p>
+
+    <div class="auction">
+      <div class="controls">
+        <div class="ctrl">
+          <label for="bid">Quanto você topa pagar <output id="bidOut">R$ 6</output></label>
+          <input type="range" id="bid" min="1" max="12" step="1" value="6">
+          <small>Por resultado. Tipo: por mensagem que chega.</small>
+        </div>
+        <div class="ctrl">
+          <label for="rate">Chance da dona Cida agir <output id="rateOut">2 de 100</output></label>
+          <input type="range" id="rate" min="1" max="6" step="1" value="2">
+          <small>Sobe quando você pede a coisa certa pra pessoa certa.</small>
+        </div>
+        <div class="ctrl">
+          <label for="qual">Qualidade do anúncio <output id="qualOut">péssima</output></label>
+          <input type="range" id="qual" min="-4" max="4" step="1" value="-4">
+          <small>X-tudo em cima do micro-ondas = péssima.</small>
+        </div>
+        <div class="presets" aria-label="Exemplos prontos">
+          <button type="button" data-p="6,2,-4">X-tudo no micro-ondas</button>
+          <button type="button" data-p="12,2,-4">Joga dinheiro no problema</button>
+          <button type="button" data-p="5,5,4">Anúncio bom</button>
+        </div>
+      </div>
+      <div class="board" aria-live="polite">
+        <div id="rows"></div>
+        <div class="verdict">
+          <h3 id="vTitle"></h3>
+          <p id="vText"></p>
+        </div>
+        <p class="note">Números inventados pra ilustrar. A conta real da Meta é bem mais complexa, mas a lógica é essa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 A META É LITERAL -->
+<section>
+  <div class="wrap">
+    <div class="step"><b>3</b><span class="mute">A aposta</span></div>
+    <div class="grid2">
+      <h2>A Meta te entrega exatamente o que você pede. Esse é o problema.</h2>
+      <p class="lead">Quando você cria o anúncio, escolhe um objetivo. A Meta vai atrás das pessoas com mais chance de fazer <em>aquilo</em>. Não o que você queria. O que você pediu.</p>
+    </div>
+
+    <div class="people">
+      <div class="person">
+        <span class="ask">Você pediu: curtidas</span>
+        <svg viewBox="0 0 96 96"><circle cx="48" cy="34" r="20" fill="none" stroke="var(--ink)" stroke-width="4"/><path d="M14 92c0-22 15-34 34-34s34 12 34 34" fill="none" stroke="var(--ink)" stroke-width="4"/><path d="M70 10l4 8 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z" fill="var(--ink)"/></svg>
+        <h3>Seu Valdir, curtidor profissional</h3>
+        <p style="margin-top:8px">Curte tudo. Curtiu seu lanche e um velório no mesmo minuto.</p>
+        <dl><dt>Curtidas na semana</dt><dd>4.812</dd><dt>Compras na vida</dt><dd>0</dd></dl>
+      </div>
+      <div class="person">
+        <span class="ask">Você pediu: visitas no perfil</span>
+        <svg viewBox="0 0 96 96"><circle cx="48" cy="34" r="20" fill="none" stroke="var(--ink)" stroke-width="4"/><path d="M14 92c0-22 15-34 34-34s34 12 34 34" fill="none" stroke="var(--ink)" stroke-width="4"/><circle cx="41" cy="32" r="3" fill="var(--ink)"/><circle cx="55" cy="32" r="3" fill="var(--ink)"/></svg>
+        <h3>Kelly, a curiosa</h3>
+        <p style="margin-top:8px">Entra em todo perfil. Olha tudo. Vai embora sem dizer nada.</p>
+        <dl><dt>Perfis visitados hoje</dt><dd>211</dd><dt>Mensagens mandadas</dt><dd>0</dd></dl>
+      </div>
+      <div class="person">
+        <span class="ask" style="background:var(--or);border-color:var(--or);color:#000">Você pediu: mensagens</span>
+        <svg viewBox="0 0 96 96"><circle cx="48" cy="34" r="20" fill="none" stroke="var(--ink)" stroke-width="4"/><path d="M14 92c0-22 15-34 34-34s34 12 34 34" fill="none" stroke="var(--ink)" stroke-width="4"/><rect x="60" y="6" width="30" height="20" fill="var(--ink)"/></svg>
+        <h3>Dona Cida, com fome</h3>
+        <p style="margin-top:8px">Costuma chamar empresa no WhatsApp perguntando preço. É ela que você quer.</p>
+        <dl><dt>Pergunta "tem entrega?"</dt><dd>sempre</dd><dt>Pede três X-tudo</dt><dd>sexta</dd></dl>
+      </div>
+    </div>
+    <p class="note">Personagens ilustrativos. O botão "impulsionar" hoje deixa escolher o objetivo: se você pedir curtida, vai receber curtida.</p>
+  </div>
+</section>
+
+<!-- 4 QUALIDADE -->
+<section>
+  <div class="wrap">
+    <div class="step"><b>4</b><span class="mute">A qualidade</span></div>
+    <h2>Anúncio feio paga mais caro. Literalmente.</h2>
+    <p class="lead" style="margin-top:28px">Se a dona Cida passa direto, esconde ou marca "não quero ver isso", a Meta anota. Sua nota cai e você precisa pagar mais pra aparecer de novo.</p>
+
+    <div class="ads">
+      <div class="ad">
+        <div class="top"><i></i>lanchonete_do_tio · Patrocinado</div>
+        <svg class="img" viewBox="0 0 400 400" aria-label="Foto ruim de lanche em cima do micro-ondas">
+          <rect width="400" height="400" fill="#C9B35A"/>
+          <rect x="60" y="210" width="280" height="170" fill="#8C8A80" stroke="#000" stroke-width="4"/>
+          <rect x="84" y="236" width="170" height="120" fill="#5E5C55" stroke="#000" stroke-width="3"/>
+          <circle cx="300" cy="260" r="10" fill="#000"/><circle cx="300" cy="300" r="10" fill="#000"/>
+          <ellipse cx="200" cy="196" rx="84" ry="18" fill="#A57A3E" stroke="#000" stroke-width="3"/>
+          <rect x="120" y="172" width="160" height="16" fill="#6B3E1E" transform="rotate(-6 200 180)"/>
+          <path d="M120 170q80-64 160 0z" fill="#B8894A" stroke="#000" stroke-width="3" transform="rotate(-6 200 180)"/>
+          <text x="330" y="50" font-size="40" font-family="sans-serif">📱</text>
+        </svg>
+        <div class="cap"><b>Venha experimentar 😋🔥</b></div>
+        <div class="res"><span>A dona Cida</span><span>passou direto</span></div>
+      </div>
+      <div class="ad">
+        <div class="top"><i></i>lanchonete_do_tio · Patrocinado</div>
+        <svg class="img" viewBox="0 0 400 400" aria-label="Foto boa de lanche com fundo limpo">
+          <rect width="400" height="400" fill="#1A1A1A"/>
+          <path d="M80 210q120-150 240 0z" fill="#D9A25B"/>
+          <rect x="76" y="210" width="248" height="22" fill="#5DAA3C"/>
+          <rect x="72" y="232" width="256" height="36" fill="#6B2E14"/>
+          <rect x="80" y="268" width="240" height="14" fill="#F2C230"/>
+          <path d="M80 282h240q-10 40-120 40t-120-40z" fill="#D9A25B"/>
+          <text x="200" y="370" text-anchor="middle" font-family="Inter Tight,Arial,sans-serif" font-weight="900" font-size="30" fill="#EDEBE6">R$ 24 · entrega em 30 min</text>
+        </svg>
+        <div class="cap"><b>X-tudo que chega quente. Pede no WhatsApp.</b></div>
+        <div class="res" style="background:var(--or);color:#000"><span>A dona Cida</span><span>mandou mensagem</span></div>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin-top:40px">
+      <div><h3>Derruba a nota</h3><p style="margin-top:10px">Gente escondendo o anúncio, marcando "ver menos", foto que ninguém entende, promessa que não bate com o que a pessoa encontra depois.</p></div>
+      <div><h3>Sobe a nota</h3><p style="margin-top:10px">A pessoa entende em 1 segundo o que é, quanto custa e o que fazer. E quando clica, encontra o que foi prometido.</p></div>
+      <div><h3>Resumindo</h3><p style="margin-top:10px">A Meta quer que a dona Cida continue no aplicativo. Anúncio que espanta gente custa mais pra quem anuncia.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 MAIS CARO -->
+<section>
+  <div class="wrap">
+    <div class="step"><b>5</b><span class="mute">Por que fica mais caro todo mês</span></div>
+    <div class="grid2">
+      <h2>A dona Cida é a mesma. O número de gente brigando por ela, não.</h2>
+      <p class="lead">Todo mês entra mais empresa no leilão. Todo curso de "como anunciar" forma mais concorrente. Mesma vaga, mais gente querendo, preço sobe.</p>
+    </div>
+    <div class="chart" role="img" aria-label="Ilustração: conforme o número de anunciantes aumenta, o preço para aparecer sobe">
+      <div class="cols" id="cols"></div>
+      <div class="labels" id="labels"></div>
+      <p class="note">Ilustração. Cada quadradinho é um anunciante disputando a mesma pessoa.</p>
+    </div>
+    <p class="lead" style="margin-top:40px">É por isso que quem só aumenta o dinheiro perde. A única coisa que você controla sozinho é a <span class="hl">chance</span> e a <span class="hl">qualidade</span>. O dinheiro, todo mundo tem um pouco.</p>
+  </div>
+</section>
+
+<!-- 6 O QUE FAZER -->
+<section>
+  <div class="wrap">
+    <div class="step"><b>6</b><span class="mute">O que fazer segunda-feira</span></div>
+    <h2 style="margin-bottom:48px">Três coisas. Nenhuma custa curso.</h2>
+    <div class="todo">
+      <div>
+        <span class="n">1</span>
+        <p class="no">Pedir curtida porque é barato.</p>
+        <p class="yes"><b>Pedir o que paga as contas.</b> Mensagem no WhatsApp, pedido, visita na loja. Curtida barata é o Seu Valdir.</p>
+      </div>
+      <div>
+        <span class="n">2</span>
+        <p class="no">Foto do lanche em cima do micro-ondas.</p>
+        <p class="yes"><b>Anúncio que se explica em 1 segundo.</b> O que é, quanto custa, como pede. Anúncio bom paga menos pela mesma vaga.</p>
+      </div>
+      <div>
+        <span class="n">3</span>
+        <p class="no">Mudar tudo a cada dois dias porque "não tá dando".</p>
+        <p class="yes"><b>Dar tempo pra Meta aprender.</b> Ela precisa ver gente agindo pra saber em quem apostar. Mexeu em tudo, ela recomeça do zero.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FONTES -->
+<section>
+  <div class="wrap">
+    <h3>De onde saiu isso</h3>
+    <ul class="sources" style="margin-top:14px">
+      <li>Meta, Central de Ajuda para Empresas, "Sobre leilões de anúncios": o vencedor é definido por lance × taxa de ação estimada + qualidade do anúncio.</li>
+      <li><a href="https://datareportal.com/reports/digital-2026-brazil">DataReportal, Digital 2026: Brazil</a>: alcance potencial de anúncios no Brasil no fim de 2025 (Instagram 147 mi, Facebook 109 mi).</li>
+      <li>Personagens, exemplos e números do simulador são ilustrativos.</li>
+    </ul>
+  </div>
+</section>
+
+<script>
+(function(){
+  var rivals=[
+    {name:"A bet",sub:"dinheiro infinito, anúncio chato",bid:10,rate:1,qual:-2},
+    {name:"A pizzaria",sub:"paga pouco, anúncio bom",bid:5,rate:4,qual:3}
+  ];
+  var qualNames={"-4":"péssima","-3":"muito ruim","-2":"ruim","-1":"meh","0":"normal","1":"ok","2":"boa","3":"muito boa","4":"ótima"};
+  var bid=document.getElementById('bid'),rate=document.getElementById('rate'),qual=document.getElementById('qual');
+  function score(a){return a.bid*a.rate+a.qual}
+  function render(){
+    var me={name:"Você",sub:"o X-tudo",bid:+bid.value,rate:+rate.value,qual:+qual.value,me:true};
+    document.getElementById('bidOut').textContent='R$ '+me.bid;
+    document.getElementById('rateOut').textContent=me.rate+' de 100';
+    document.getElementById('qualOut').textContent=qualNames[me.qual];
+    var all=rivals.concat([me]).map(function(a){return Object.assign({s:score(a)},a)});
+    all.sort(function(a,b){return b.s-a.s || (a.me?-1:1)});
+    var max=Math.max.apply(null,all.map(function(a){return Math.max(a.s,1)}));
+    var html='';
+    all.forEach(function(a,i){
+      var w=Math.max(a.s,0)/Math.max(max,1)*100;
+      html+='<div class="row'+(i===0?' win':'')+'"><div class="name">'+a.name+'<small>'+(i===0?'ganhou a vaga':a.sub)+'</small></div><div class="bar"><i style="width:'+w+'%"></i></div><div class="score">'+a.s+'</div></div>';
+    });
+    document.getElementById('rows').innerHTML=html;
+    var t=document.getElementById('vTitle'),p=document.getElementById('vText');
+    if(all[0].me){
+      var second=all[1].s;
+      var need=Math.max(1,Math.ceil((second+1-me.qual)/me.rate));
+      var pay=Math.min(need,me.bid);
+      t.textContent='Você ganhou a vaga.';
+      p.textContent='Topou pagar até R$ '+me.bid+', mas pra passar de quem ficou em segundo bastava uns R$ '+pay+'. Anúncio bom ganha pagando menos.';
+    }else{
+      t.textContent='Você perdeu. A dona Cida viu '+all[0].name.toLowerCase()+'.';
+      if(me.qual<0 && me.bid>=10){p.textContent='Você tá pagando mais que a pizzaria e mesmo assim perdendo. O problema não é o dinheiro, é o anúncio.';}
+      else if(me.qual<0){p.textContent='Anúncio ruim derruba sua nota. Tenta subir a qualidade antes de subir o dinheiro.';}
+      else{p.textContent='Tá quase. Pedir a coisa certa (subir a chance) costuma render mais que aumentar o lance.';}
+    }
+  }
+  [bid,rate,qual].forEach(function(el){el.addEventListener('input',render)});
+  document.querySelectorAll('.presets button').forEach(function(b){
+    b.addEventListener('click',function(){var v=b.dataset.p.split(',');bid.value=v[0];rate.value=v[1];qual.value=v[2];render();});
+  });
+  render();
+
+  // chart
+  var months=[{l:'Ano 1',n:6,p:'R$ 2'},{l:'Ano 2',n:12,p:'R$ 3'},{l:'Ano 3',n:22,p:'R$ 5'},{l:'Ano 4',n:36,p:'R$ 8'},{l:'Agora',n:56,p:'R$ 12'}];
+  var cols='',labels='';
+  months.forEach(function(m,i){
+    var sq='';for(var k=0;k<m.n;k++){sq+='<span'+(i===months.length-1&&k===0?' style="background:var(--or)"':'')+'></span>'}
+    cols+='<div class="col"><div class="price">'+m.p+'</div><div class="stack">'+sq+'</div></div>';
+    labels+='<div>'+m.l+'</div>';
+  });
+  document.getElementById('cols').innerHTML=cols;
+  document.getElementById('labels').innerHTML=labels;
+})();
+</script>
+</body>
+</html>
