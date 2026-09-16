@@ -24,7 +24,7 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:"Neue Haas Grotesk Display Pro","Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:19px;line-height:1.5;-webkit-font-smoothing:antialiased}
 img,svg{max-width:100%;display:block}
-.brand{position:fixed;right:22px;bottom:18px;font-weight:800;font-size:15px;letter-spacing:-.02em;z-index:10;background:var(--bg);padding:2px 6px}
+.topbar{border-bottom:2px solid var(--line)}.topbar .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:22px;padding-bottom:22px}.logo{font-weight:900;font-size:34px;letter-spacing:-.05em;line-height:1;color:var(--ink);text-decoration:none}.topbar small{font-size:15px;font-weight:600;color:var(--mute)}
 .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
 section{border-top:2px solid var(--line);padding:96px 0}
 h1{font-size:clamp(52px,9vw,128px);line-height:.9;letter-spacing:-.045em;font-weight:900}
@@ -130,11 +130,11 @@ input[type=range]:focus-visible{outline:3px solid var(--or)}
   .cols{gap:8px}.labels{gap:8px}
   .col .stack span{width:9px;height:9px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<div class="brand">tomorrow.</div>
+<div class="topbar"><div class="wrap"><span class="logo" aria-label="tomorrow.">tomorrow.</span><small>agenciatomorrow.com</small></div></div>
 
 <!-- HERO -->
 <header class="hero">
@@ -226,11 +226,18 @@ input[type=range]:focus-visible{outline:3px solid var(--or)}
       <div><h3>Qualidade</h3><p style="margin-top:10px">Se as pessoas escondem, ignoram ou marcam "ver menos", sua nota cai. Anúncio chato é multado.</p></div>
     </div>
 
-    <h3 style="margin-top:72px">Brinca aí: você contra a bet e a pizzaria</h3>
-    <p class="mute" style="margin-top:6px">Mexe nos controles do seu anúncio e vê quem ganha a vaga da dona Cida.</p>
+    <div class="playcta" id="jogar">
+      <span class="hand" aria-hidden="true">👇</span>
+      <div>
+        <strong>Agora é com você. Tenta ganhar a vaga da dona Cida.</strong>
+        <span>Arrasta as barrinhas ou clica num dos exemplos. O placar muda na hora.</span>
+      </div>
+      <a href="#simulador">Quero testar</a>
+    </div>
 
-    <div class="auction">
+    <div class="auction" id="simulador">
       <div class="controls">
+        <span class="tryme">Seu anúncio · mexe aqui</span>
         <div class="ctrl">
           <label for="bid">Quanto você topa pagar <output id="bidOut">R$ 6</output></label>
           <input type="range" id="bid" min="1" max="12" step="1" value="6">
@@ -443,6 +450,9 @@ input[type=range]:focus-visible{outline:3px solid var(--or)}
     b.addEventListener('click',function(){var v=b.dataset.p.split(',');bid.value=v[0];rate.value=v[1];qual.value=v[2];render();});
   });
   render();
+  document.querySelector('.playcta a').addEventListener('click',function(){
+    var c=document.querySelector('.controls');c.classList.remove('nudge');void c.offsetWidth;c.classList.add('nudge');
+  });
 
   // chart
   var months=[{l:'Ano 1',n:6,p:'R$ 2'},{l:'Ano 2',n:12,p:'R$ 3'},{l:'Ano 3',n:22,p:'R$ 5'},{l:'Ano 4',n:36,p:'R$ 8'},{l:'Agora',n:56,p:'R$ 12'}];
