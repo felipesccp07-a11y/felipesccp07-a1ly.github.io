@@ -500,14 +500,14 @@ footer .fine{margin-top:44px;padding-top:22px;border-top:1.5px solid var(--line)
       <p class="mute" style="margin-top:20px">Não é isca pra ligar te vendendo coisa. Se der pra resolver sozinho, a gente fala que dá.</p>
       <div class="btns"><a class="btn fill" href="diagnostico.html">Fazer o diagnóstico</a></div>
       <div class="or-line">ou pula pra conversa</div>
-      <p class="mute">Preenche aí do lado que a gente marca uma reunião e olha seu cenário junto com você.</p>
+      <p class="mute">Preenche aí do lado que cai direto no meu WhatsApp e a gente marca uma reunião.</p>
     </div>
     <div class="form">
       <div><label for="n">Seu nome</label><input id="n" name="nome" placeholder="Como te chamam"></div>
       <div><label for="e">E-mail</label><input id="e" type="email" name="email" placeholder="voce@suaempresa.com.br"></div>
       <div><label for="w">WhatsApp</label><input id="w" name="whats" placeholder="(00) 00000-0000"></div>
       <div><label for="q">O que tá travando hoje</label><input id="q" name="contexto" placeholder="Em uma frase, sem precisar ser bonito"></div>
-      <button class="btn" type="button" id="send">Agendar reunião →</button>
+      <button class="btn" type="button" id="send">Mandar no WhatsApp →</button>
       <span class="mute" style="font-size:14px" id="sendMsg"></span>
     </div>
   </div>
@@ -529,7 +529,7 @@ footer .fine{margin-top:44px;padding-top:22px;border-top:1.5px solid var(--line)
       </div>
       <div class="links">
         <a href="https://www.instagram.com/agenciatomorrow">Instagram</a>
-        <a href="https://wa.me/5535984468504</a>
+        <a href="https://wa.me/5535984468504">WhatsApp (35) 98446-8504</a>
         <a href="mailto:contato@wearetomorrow.com.br">contato@wearetomorrow.com.br</a>
       </div>
     </div>
@@ -555,8 +555,11 @@ footer .fine{margin-top:44px;padding-top:22px;border-top:1.5px solid var(--line)
   if(btn){btn.addEventListener('click',function(){
     var n=document.getElementById('n').value.trim(),w=document.getElementById('w').value.trim();
     var msg=document.getElementById('sendMsg');
-    if(!n||!w){msg.textContent='Falta o nome e o WhatsApp. Sem isso não tem como te achar.';return;}
-    msg.textContent='Recebido, '+n.split(' ')[0]+'. Conecte este formulário ao seu back-end ou ao WhatsApp pra valer.';
+    if(!n){msg.textContent='Falta o nome. Sem isso não tem como te chamar.';return;}
+    var e=document.getElementById('e').value.trim(),q=document.getElementById('q').value.trim();
+    var t='Oi, sou '+n+'.'+(q?' '+q:'')+(w?'\nMeu WhatsApp: '+w:'')+(e?'\nMeu e-mail: '+e:'')+'\n\nVim pelo site.';
+    msg.textContent='Abrindo o WhatsApp...';
+    window.open('https://wa.me/5535984468504?text='+encodeURIComponent(t),'_blank','noopener');
   });}
 })();
 </script>
