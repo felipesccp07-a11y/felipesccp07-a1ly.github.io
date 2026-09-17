@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tomorrow — Campanhas que ninguém mais criaria.</title>
 <meta name="description" content="A Tomorrow cria campanhas que ninguém mais criaria e depois prova que deu dinheiro. Sem pacote pronto, sem sigla, sem relatório de vaidade.">
+<link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -90,6 +91,8 @@ header.nav{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1
 /* case */
 .case{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,72px);align-items:start}
 .caseart{border:1.5px solid var(--line);background:var(--card);padding:18px}
+.shot{width:100%;height:auto;border:1.5px solid var(--line);background:var(--soft)}
+.shot.miss{min-height:220px;border-style:dashed;padding:18px;font-size:14px;font-weight:700;color:var(--mute);background:repeating-linear-gradient(135deg,transparent 0 12px,var(--soft) 12px 13px)}
 .ph{aspect-ratio:4/3;border:1.5px dashed var(--line);display:grid;place-content:center;text-align:center;gap:6px;color:var(--mute);font-size:14px;font-weight:700;background:
   repeating-linear-gradient(135deg,transparent 0 12px,var(--soft) 12px 13px)}
 .audio{border:1.5px solid var(--line);background:var(--card);padding:20px;margin-top:28px;display:flex;flex-direction:column;gap:12px}
@@ -320,9 +323,8 @@ footer .fine{margin-top:44px;padding-top:22px;border-top:1.5px solid var(--line)
         </div>
       </div>
       <div class="caseart">
-        <!-- Trocar os placeholders por: <img src="Principal.jpg" alt="Campanha Carijó"> -->
-        <div class="ph"><span>Principal.jpg</span><span class="mute">foto da campanha</span></div>
-        <div class="ph" style="margin-top:18px;aspect-ratio:16/10"><span>4_3_02.png</span><span class="mute">antes e depois</span></div>
+        <img class="shot" src="Principal.jpg" alt="Campanha do Restaurante Carijó, em Arceburgo (MG)" loading="lazy">
+        <img class="shot" style="margin-top:18px" src="4_3_02.png" alt="Antes e depois da campanha do Carijó" loading="lazy">
       </div>
     </div>
   </div>
@@ -336,12 +338,14 @@ footer .fine{margin-top:44px;padding-top:22px;border-top:1.5px solid var(--line)
       <div class="proof">
         <div class="tag">Branding · Razze Turismo</div>
         <div class="res">Rebranding feito.<br><span>O contrato travado fechou.</span></div>
-        <div class="ph" style="margin-top:26px;aspect-ratio:4/3"><span>4_3_04.png</span><span class="mute">identidade Razze</span></div>
+        <img class="shot" style="margin-top:26px" src="4_3_04.png" alt="Nova identidade da Razze Turismo" loading="lazy">
+        <img class="shot" style="margin-top:14px" src="4_3_03.png" alt="Depoimento da Razze Turismo" loading="lazy">
       </div>
       <div class="proof">
         <div class="tag">Jornada de compra · Método Start</div>
         <div class="res">Caminho de venda montado do zero.<br><span>20 alunos matriculados.</span></div>
-        <div class="ph" style="margin-top:26px;aspect-ratio:4/3"><span>4_3_06.png</span><span class="mute">identidade Método Start</span></div>
+        <img class="shot" style="margin-top:26px" src="4_3_06.png" alt="Identidade do Método Start" loading="lazy">
+        <img class="shot" style="margin-top:14px" src="4_3_05.png" alt="Depoimento do Método Start" loading="lazy">
       </div>
     </div>
     <p class="mute" style="margin-top:22px;font-size:16px">Só isso. Duas linhas cada. A gente prefere ter três casos verdadeiros do que trinta quadradinhos escritos “em breve”.</p>
@@ -454,8 +458,7 @@ footer .fine{margin-top:44px;padding-top:22px;border-top:1.5px solid var(--line)
     <div class="eyebrow"><b>09</b> Quem é</div>
     <div class="who">
       <div>
-        <!-- Trocar por: <img src="foto_felipe.jpg" alt="Felipe, fundador da Tomorrow"> -->
-        <div class="ph"><span>foto_felipe.jpg</span><span class="mute">retrato</span></div>
+        <img class="shot" src="foto_felipe.jpg" alt="Felipe, fundador da Tomorrow" loading="lazy">
       </div>
       <div>
         <h2>Felipe.</h2>
@@ -543,6 +546,10 @@ footer .fine{margin-top:44px;padding-top:22px;border-top:1.5px solid var(--line)
     es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
   },{threshold:.12});
   document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+
+  document.querySelectorAll('img.shot').forEach(function(im){
+    im.addEventListener('error',function(){im.classList.add('miss')});
+  });
 
   var btn=document.getElementById('send');
   if(btn){btn.addEventListener('click',function(){
